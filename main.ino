@@ -26,7 +26,7 @@ int CO, NH3, CO2, TVOC;
 float NO2;
 const int S_analog=1023.0;
 
-float porem;
+float po;
 
 // 미세먼지 초기 설정
 int Vo=A0; // A0
@@ -48,6 +48,7 @@ void setup() {
   Serial.begin(9600);
   bluetooth.begin(9600); 
   sensorSerial.begin(9600);
+  sensorSerial.listen();
   ccs.begin();
   
   sensorSerial.listen();
@@ -57,12 +58,25 @@ void setup() {
  
   // Wait for the sensor to be ready
   while(!ccs.available());
+  //  while(true){
+  //    if (hchoSensor.available()>0){
+  //      po=hchoSensor.uartReadPPM();
+  //      Serial.print("포름:");
+  //      Serial.println(po);
+  //      break;
+  //    }
+  //  };
   delay(5000);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   
+  if(!ccs.readData()){
+    CO2=ccs.geteCO2();
+    TVOC=ccs.getTVOC();
+  }
+
   digitalWrite(V_LED,LOW); // 적외선 on
   delayMicroseconds(280);
   Vo_value=analogRead(Vo); // 전압값을 읽음
@@ -87,11 +101,6 @@ void loop() {
   Serial.print("CO: ");
   Serial.println(CO);        
   Serial.println();
-
-  if(!ccs.readData()){
-    CO2=ccs.geteCO2();
-    TVOC=ccs.getTVOC();
-  }
 
   Serial.print("CO2: ");
   Serial.println(CO2);
@@ -149,6 +158,14 @@ void loop() {
       Serial.println(c);
     } 
   }
+
+  //  if(hchoSensor.available()>0)
+  //  {
+  //    po=(hchoSensor.uartReadPPM());
+  //    Serial.print("포름알데히드:");
+  //    Serial.println(po);
+  //  }
+
   String c = alpha + "," + String(a) + "," + String(b) + "," + String(dustDensity) + "," + String(NH3) + "," + String(NO2) + "," + String(CO)+ "," + String(CO2)+ "," + String(TVOC);
   bluetooth.println(c);
   delay(1000);
