@@ -128,13 +128,21 @@ void loop() {
   }
   else if(dustDensity>=80 && dustDensity<=150 && type!=bad){
     type=bad;
-    for(int i=0; i<5; i++){ // 5초동안 5번의 데이터의 평균값을 산출
+    for(int i=0; i<50; i++){ // 5초동안 5번의 데이터의 평균값을 산출
+      digitalWrite(V_LED,LOW); // 적외선 on
+      delayMicroseconds(280);
+      Vo_value=analogRead(Vo); // 전압값을 읽음
+      delayMicroseconds(40);
+      digitalWrite(V_LED,HIGH); // 적외선 off
+      delayMicroseconds(9680);
       Voltage=Vo_value*5.0/1023.0; // 원래의 전압값으로 변환해줌
-      dustDensity=(Voltage-0.01)/0.005; 
+      dustDensity=(Voltage-0.4)/0.005; 
       sum=sum+dustDensity;
-      delay(1000);
+      delay(1);
     }
-    average=sum/5;
+    average=sum/50;
+    Serial.print("평균:");
+    Serial.println(average);
     if (average>=80 && average<=150){
       String alpha = "미세먼지 나쁨";
       String c = alpha + "," + String(a) + "," + String(b) + "," + String(dustDensity) + "," + String(NH3) + "," + String(NO2) + "," + String(CO)+ "," + String(CO2)+ "," + String(TVOC);
@@ -145,12 +153,18 @@ void loop() {
   else if(dustDensity>151 && type!=terrible){
     type=terrible;
     for(int i=0; i<50; i++){ // 5초동안 50번의 데이터의 평균값을 산출
+      digitalWrite(V_LED,LOW); // 적외선 on
+      delayMicroseconds(280);
+      Vo_value=analogRead(Vo); // 전압값을 읽음
+      delayMicroseconds(40);
+      digitalWrite(V_LED,HIGH); // 적외선 off
+      delayMicroseconds(9680);
       Voltage=Vo_value*5.0/1023.0; // 원래의 전압값으로 변환해줌
-      dustDensity=(Voltage-0.01)/0.005; 
+      dustDensity=(Voltage-0.4)/0.005; 
       sum=sum+dustDensity;
-      delay(100);
+      delay(1);
     }
-    average=sum/5;
+    average=sum/50;
     if (average>151){
       String alpha = "미세먼지 매우 나쁨";
       String c = alpha + "," + String(a) + "," + String(b) + "," + String(dustDensity) + "," + String(NH3) + "," + String(NO2) + "," + String(CO)+ "," + String(CO2)+ "," + String(TVOC);
@@ -158,6 +172,33 @@ void loop() {
       Serial.println(c);
     } 
   }
+
+  if(CO2<1000){
+    type2=-1;
+  }
+
+  if (CO2>1000 && type2!=bad){
+    Serial.println("1000 넘음!!!!!!!!!!!");
+    type2=bad;
+    long int sum1=0;
+    for(int i=0; i<50;i++){ // 데이터 50번 입력 받음
+      if(!ccs.readData()){
+        CO2=ccs.geteCO2();
+        TVOC=ccs.getTVOC();
+        Serial.print("넘었을 때CO2:");
+        Serial.println(CO2);
+        sum1+=CO2;
+      }
+      delay(10);
+    }
+
+    float average1=sum1/50;
+    if (average1>1000){
+      Serial.println("평균 넘음!!!!!!!!!!!!!!!!!");
+      String alpha = "이산화탄소 나쁨";
+      String c = alpha + "," + String(a) + "," + String(b) + "," + String(dustDensity) + "," + String(NH3) + "," + String(NO2) + "," + String(CO)+ "," + String(CO2)+ "," + String(TVOC);
+      bluetooth.println(c);
+    }
 
   //  if(hchoSensor.available()>0)
   //  {
