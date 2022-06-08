@@ -58,14 +58,14 @@ void setup() {
  
   // Wait for the sensor to be ready
   while(!ccs.available());
-  //  while(true){
-  //    if (hchoSensor.available()>0){
-  //      po=hchoSensor.uartReadPPM();
-  //      Serial.print("포름:");
-  //      Serial.println(po);
-  //      break;
-  //    }
-  //  };
+    while(true){
+      if (hchoSensor.available()>0){
+         po=hchoSensor.uartReadPPM();
+        Serial.print("포름:");
+        Serial.println(po);
+         break;
+       }
+    };
   delay(5000);
 }
 
@@ -200,12 +200,12 @@ void loop() {
       bluetooth.println(c);
     }
 
-  //  if(hchoSensor.available()>0)
-  //  {
-  //    po=(hchoSensor.uartReadPPM());
-  //    Serial.print("포름알데히드:");
-  //    Serial.println(po);
-  //  }
+    if(hchoSensor.available()>0)
+    {
+      po=(hchoSensor.uartReadPPM());
+      Serial.print("포름알데히드:");
+      Serial.println(po);
+    }
 
   String c = alpha + "," + String(a) + "," + String(b) + "," + String(dustDensity) + "," + String(NH3) + "," + String(NO2) + "," + String(CO)+ "," + String(CO2)+ "," + String(TVOC);
   bluetooth.println(c);
