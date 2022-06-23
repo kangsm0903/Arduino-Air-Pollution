@@ -13,7 +13,7 @@
 
 * #### MIT APP Inventor: 측정값 반환 화면 
 
-<img src="https://user-images.githubusercontent.com/48651812/172056756-c3c087d0-a83a-4a52-a8bc-524aae8dc393.jpg" width="250" height="500">
+<img src="https://user-images.githubusercontent.com/48651812/175314151-3d6a045c-f708-453f-8be6-afc5f850eb7c.jpg" width="250" height="500">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="https://user-images.githubusercontent.com/48651812/172056756-c3c087d0-a83a-4a52-a8bc-524aae8dc393.jpg" width="250" height="500">
 
 * * *
 
